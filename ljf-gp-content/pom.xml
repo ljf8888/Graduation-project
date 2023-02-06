@@ -8,11 +8,21 @@
         <version>0.0.1-SNAPSHOT</version>
         <relativePath>../ljf-gp-parent</relativePath>
     </parent>
-
+    <modules>
+        <module>ljf-gp-content-model</module>
+        <module>ljf-gp-content-service</module>
+        <module>ljf-gp-content-api</module>
+    </modules>
     <groupId>com.ljf</groupId>
     <artifactId>ljf-gp-content</artifactId>
     <version>0.0.1-SNAPSHOT</version>
     <packaging>pom</packaging>
-
+    <dependencies>
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-test</artifactId>
+            <version>2.3.9.RELEASE</version>
+        </dependency>
+    </dependencies>
 
 </project>
