@@ -12,3 +12,6 @@ Content-Type: application/json
 GET {{content}}/content/course-category/tree-nodes
 
 http://localhost:8601/#/organization/course-list
+
+### 新增
+POST http://localhost:8080/content/course

@@ -1,5 +1,7 @@
 package com.ljf.service;
 
+import com.ljf.dto.AddCourseDto;
+import com.ljf.dto.CourseBaseInfoDto;
 import com.ljf.dto.CourseCategoryTreeDto;
 import com.ljf.dto.QueryCourseParamsDto;
 import com.ljf.model.PageParams;
@@ -24,6 +26,20 @@ public interface CourseBaseService {
      * @return: com.ljf.model.PageResult<com.ljf.po.CourseBase>
      **/
     public PageResult<CourseBase> queryCourseBaseList(PageParams params, QueryCourseParamsDto queryCourseParamsDto);
-
+    /**
+     * @description:
+     * @author 李炯飞
+     * @date: 2023/2/7 16:22
+     * @param: []
+     * @return: java.util.List<com.ljf.dto.CourseCategoryTreeDto>
+     **/
     List<CourseCategoryTreeDto> queryTreeNodes();
+    /**
+     * @description:
+     * @author 李炯飞
+     * @date: 2023/2/7 16:22
+     * @param: [companyId, addCourseDto]
+     * @return: com.ljf.dto.CourseBaseInfoDto
+     **/
+    CourseBaseInfoDto createCourseBase(Long companyId, AddCourseDto addCourseDto);
 }

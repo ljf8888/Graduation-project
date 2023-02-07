@@ -8,7 +8,10 @@ import com.ljf.dto.QueryCourseParamsDto;
 import com.ljf.model.PageParams;
 import com.ljf.model.PageResult;
 import com.ljf.po.CourseBase;
+import com.ljf.po.CourseCategory;
+import com.ljf.po.CourseMarket;
 import org.apache.commons.lang.StringUtils;
+import org.apache.ibatis.annotations.Insert;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Select;
 
@@ -24,4 +27,10 @@ import java.util.List;
 @Mapper
 public interface CourseBaseDao extends BaseMapper<CourseBase> {
     public List<CourseCategoryTreeDto> selectTreeNodes();
+    @Select("")
+    CourseMarket selectCourseMarketById(Long courseId);
+    @Select("")
+    CourseCategory selectCourseCategoryMtById(String mt);
+    @Select("")
+    CourseCategory selectCourseCategoryStById(String st);
 }
