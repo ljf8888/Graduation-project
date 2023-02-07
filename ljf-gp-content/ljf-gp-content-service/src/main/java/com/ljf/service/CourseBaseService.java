@@ -1,9 +1,12 @@
 package com.ljf.service;
 
+import com.ljf.dto.CourseCategoryTreeDto;
 import com.ljf.dto.QueryCourseParamsDto;
 import com.ljf.model.PageParams;
 import com.ljf.model.PageResult;
 import com.ljf.po.CourseBase;
+
+import java.util.List;
 
 /**
  * @Classname CourseBaseService
@@ -22,4 +25,5 @@ public interface CourseBaseService {
      **/
     public PageResult<CourseBase> queryCourseBaseList(PageParams params, QueryCourseParamsDto queryCourseParamsDto);
 
+    List<CourseCategoryTreeDto> queryTreeNodes();
 }

@@ -7,3 +7,8 @@ Content-Type: application/json
   "courseName": "java",
   "status": "203001"
 }
+
+### 分类接口
+GET {{content}}/content/course-category/tree-nodes
+
+http://localhost:8601/#/organization/course-list

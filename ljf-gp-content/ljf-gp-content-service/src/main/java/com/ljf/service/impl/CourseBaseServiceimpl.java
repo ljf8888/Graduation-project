@@ -3,6 +3,7 @@ package com.ljf.service.impl;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.ljf.dao.CourseBaseDao;
+import com.ljf.dto.CourseCategoryTreeDto;
 import com.ljf.dto.QueryCourseParamsDto;
 import com.ljf.model.PageParams;
 import com.ljf.model.PageResult;
@@ -12,6 +13,8 @@ import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 /**
@@ -67,6 +70,34 @@ public class CourseBaseServiceimpl implements CourseBaseService {
         PageResult<CourseBase> courseBasePageResult = new PageResult<>(items, total, params.getPageNo(), params.getPageSize());
 
         return courseBasePageResult;
+    }
+
+    @Override
+    public List<CourseCategoryTreeDto> queryTreeNodes() {
+        //查询数据库得到的课程分类
+        List<CourseCategoryTreeDto> courseCategoryTreeDtos =
+                courseBaseDao.selectTreeNodes();
+        System.out.println(courseCategoryTreeDtos+"aaa");
+        List<CourseCategoryTreeDto> categoryTreeDtos = new ArrayList<>();
+        HashMap<String, CourseCategoryTreeDto> mapTemp = new HashMap<>();
+        courseCategoryTreeDtos.stream().forEach(item->{
+            mapTemp.put(item.getId(),item);
+            //只将根节点的下级节点放入list-
+            if(item.getParentid().equals("1")){
+                categoryTreeDtos.add(item);
+            }
+            CourseCategoryTreeDto courseCategoryTreeDto =
+                    mapTemp.get(item.getParentid());
+            if(courseCategoryTreeDto!=null){
+                if(courseCategoryTreeDto.getChildrenTreeNodes() ==null){
+                    courseCategoryTreeDto.setChildrenTreeNodes(new
+                            ArrayList<CourseCategoryTreeDto>());
+                }
+//向节点的下级节点list加入节点
+                courseCategoryTreeDto.getChildrenTreeNodes().add(item);
+            }
+        });
+        return categoryTreeDtos;
     }
 
 
