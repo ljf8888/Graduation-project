@@ -9,7 +9,7 @@ import com.ljf.dto.AddCourseDto;
 import com.ljf.dto.CourseBaseInfoDto;
 import com.ljf.dto.CourseCategoryTreeDto;
 import com.ljf.dto.QueryCourseParamsDto;
-import com.ljf.exception.XueChengPlusException;
+import com.ljf.exception.myselfException;
 import com.ljf.model.PageParams;
 import com.ljf.model.PageResult;
 import com.ljf.po.CourseBase;
@@ -132,37 +132,6 @@ public class CourseBaseServiceimpl implements CourseBaseService {
     @Override
     @Transactional
     public CourseBaseInfoDto createCourseBase(Long companyId, AddCourseDto dto) {
-        //校验数据库合法性
-        if(StringUtils.isBlank(dto.getName())){
-            //抛出异常
-//            throw  new RuntimeException("课程名称为空");
-            XueChengPlusException.cast("课程名称为空");
-//            XueChengPlusException.cast(CommonError.PARAMS_ERROR);
-        }
-
-        if (StringUtils.isBlank(dto.getMt())) {
-            throw new RuntimeException("课程分类为空");
-        }
-
-        if (StringUtils.isBlank(dto.getSt())) {
-            throw new RuntimeException("课程分类为空");
-        }
-
-        if (StringUtils.isBlank(dto.getGrade())) {
-            throw new RuntimeException("课程等级为空");
-        }
-
-        if (StringUtils.isBlank(dto.getTeachmode())) {
-            throw new RuntimeException("教育模式为空");
-        }
-
-        if (StringUtils.isBlank(dto.getUsers())) {
-            throw new RuntimeException("适应人群为空");
-        }
-
-        if (StringUtils.isBlank(dto.getCharge())) {
-            throw new RuntimeException("收费规则为空");
-        }
         //向Course_base课程基本信息表表添加数据
         CourseBase courseBase = new CourseBase();
         //以上设置数据的方法可以拷贝,从源拷贝到目标
@@ -191,7 +160,7 @@ public class CourseBaseServiceimpl implements CourseBaseService {
         if(charge.equals("201001")){
             if(courseMarket.getPrice()==null || courseMarket.getPrice().floatValue()<=0){
 //                throw new RuntimeException("课程为收费价格不能为空且必须大于0");
-                XueChengPlusException.cast("课程为收费价格不能为空且必须大于0");
+                myselfException.cast("课程为收费价格不能为空且必须大于0");
 
             }
         }
@@ -202,7 +171,7 @@ public class CourseBaseServiceimpl implements CourseBaseService {
 //        if(insert<1 && insert1<1){
         //只要有一个插入不成功抛出异常
         if(insert<1 || insert1<1){
-            throw new XueChengPlusException("创建课程过程中出错");
+            throw new myselfException("创建课程过程中出错");
         }
         return getCourseBaseInfo(courseId);
     }

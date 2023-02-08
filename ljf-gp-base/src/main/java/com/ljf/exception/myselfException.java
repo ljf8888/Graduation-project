@@ -7,15 +7,15 @@ package com.ljf.exception;
  * @Date 2023/2/3 15:42
  * @Created by 李炯飞
  **/
-public class XueChengPlusException extends RuntimeException {
+public class myselfException extends RuntimeException {
 
     private String errMessage;
 
-    public XueChengPlusException() {
+    public myselfException() {
         super();
     }
 
-    public XueChengPlusException(String message) {
+    public myselfException(String message) {
         super(message);
         this.errMessage = message;
     }
@@ -25,9 +25,9 @@ public class XueChengPlusException extends RuntimeException {
     }
 
     public static void cast(String errMessage){
-        throw new XueChengPlusException(errMessage);
+        throw new myselfException(errMessage);
     }
     public static void cast(CommonError commonError){
-        throw new XueChengPlusException(commonError.getErrMessage());
+        throw new myselfException(commonError.getErrMessage());
     }
 }

@@ -25,9 +25,9 @@ public class GlobalExceptionHandler {
 
   //处理XueChengPlusException异常  此类异常是程序员主动抛出的，可预知异常
   @ResponseBody//将信息返回为 json格式
-  @ExceptionHandler(XueChengPlusException.class)//此方法捕获XueChengPlusException异常
+  @ExceptionHandler(myselfException.class)//此方法捕获XueChengPlusException异常
   @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)//状态码返回500
-  public RestErrorResponse doXueChengPlusException(XueChengPlusException e){
+  public RestErrorResponse doXueChengPlusException(myselfException e){
 
    log.error("捕获异常：{}",e.getErrMessage());
    e.printStackTrace();
