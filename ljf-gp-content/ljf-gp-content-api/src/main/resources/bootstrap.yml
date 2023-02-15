@@ -1,0 +1,34 @@
+server:
+  port: 8080
+spring:
+  datasource:
+    username: root
+    password: 1234
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    url: jdbc:mysql://localhost:3306/gp_content?serverTimezone=UTC&userUnicode=true&characterEncoding=utf-8
+  cloud:
+    nacos:
+      server-addr: localhost:8848
+      discovery:
+        namespace: dev
+        group: Graduation-project
+      config:
+        namespace: dev
+        group: Graduation-project
+        file-extension: yaml
+        refresh-enabled: true
+      extension-configs:
+        - data-id: content-service-dev.yaml
+          group: Graduation-project
+          refresh: true
+  application:
+    name: content-api
+
+# swagger 文档配置
+swagger:
+  title: "内容管理系统"
+  description: "内容系统管理系统对相关信息进行业务管理数据"
+  base-package: com.ljf
+  enabled: true
+  version: 1.0.0
+

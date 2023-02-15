@@ -1,0 +1,8 @@
+minio:
+  endpoint: http://192.168.10.104:63088
+  accessKey: minioadmin
+  secretKey: minioadmin
+  bucket:
+    files: pic
+    videofiles: video
+

@@ -1,5 +1,5 @@
 ### 查询接口
-POST {{content}}/content/course/list?pageNo=1&pageSize=3
+POST {{gateway}}/content/course/list?pageNo=1&pageSize=3
 Content-Type: application/json
 
 {
@@ -9,7 +9,7 @@ Content-Type: application/json
 }
 
 ### 分类接口
-GET {{content}}/content/course-category/tree-nodes
+GET {{gateway}}/content/course-category/tree-nodes
 
 http://localhost:8601/#/organization/course-list
 

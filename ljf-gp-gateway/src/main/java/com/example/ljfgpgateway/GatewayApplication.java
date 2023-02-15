@@ -1,14 +1,14 @@
-package com.ljf;
+package com.example.ljfgpgateway;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
 @SpringBootApplication
-public class LjfGpContentApiApplication {
+public class GatewayApplication {
 
     public static void main(String[] args) {
 
-        SpringApplication.run(LjfGpContentApiApplication.class, args);
+        SpringApplication.run(GatewayApplication.class, args);
     }
 
 }

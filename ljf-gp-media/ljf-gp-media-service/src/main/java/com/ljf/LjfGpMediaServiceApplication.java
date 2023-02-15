@@ -4,11 +4,10 @@ import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
 @SpringBootApplication
-public class LjfGpContentApiApplication {
+public class LjfGpMediaServiceApplication {
 
     public static void main(String[] args) {
-
-        SpringApplication.run(LjfGpContentApiApplication.class, args);
+        SpringApplication.run(LjfGpMediaServiceApplication.class, args);
     }
 
 }
