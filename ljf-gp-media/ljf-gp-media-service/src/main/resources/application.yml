@@ -1,0 +1,50 @@
+minio:
+  endpoint: http://192.168.10.104:9000
+  accessKey: minioadmin
+  secretKey: minioadmin
+  bucket:
+    files: pic
+    videofiles: video
+spring:
+  datasource:
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    url: jdbc:mysql://localhost:3306/gp_media?serverTimezone=UTC&userUnicode=true&useSSL=false&
+    username: root
+    password: 1234
+  cloud:
+    nacos:
+      server-addr: localhost:8848
+      discovery:
+        namespace: dev
+        group: Graduation-project
+      config:
+        namespace: dev
+        group: Graduation-project
+        file-extension: yaml
+        refresh-enabled: true
+      extension-configs:
+        - data-id: content-service-dev.yaml
+          group: Graduation-project
+          refresh: true
+    config:
+      override-none: true
+  application:
+    name: media-api
+#xxl:
+#  job:
+#    admin:
+#      addresses: http://192.168.101.65:8088/xxl-job-admin
+#    executor:
+#      appname: media-process-service
+#      address:
+#      ip:
+#      port: 9999
+#      logpath: /data/applogs/xxl-job/jobhandler
+#      logretentiondays: 30
+#    accessToken: default_token
+#
+#videoprocess:
+#  ffmpegpath: D:/soft/ffmpeg/ffmpeg.exe
+
+
+

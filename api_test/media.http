@@ -1,0 +1,9 @@
+##
+POST {{gateway}}/media/upload/coursefile
+Content-Type: multipart/form-data;boundary=TestBoundary
+
+--TestBoundary
+Content-Disposition: form-data;name="filedata";filename="01.jpg"
+Content-Type: application/octet-stream
+
+<E:/desktop/wv_1549537504355.jpg
