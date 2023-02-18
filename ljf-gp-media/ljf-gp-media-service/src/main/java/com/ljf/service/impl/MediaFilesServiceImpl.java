@@ -1,11 +1,16 @@
 package com.ljf.service.impl;
 
+import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.j256.simplemagic.ContentInfo;
 import com.j256.simplemagic.ContentInfoUtil;
 import com.ljf.dao.MediaFilesMapper;
+import com.ljf.dto.QueryMediaParamsDto;
 import com.ljf.dto.UploadFileParamsDto;
 import com.ljf.dto.UploadFileResultDto;
 import com.ljf.exception.myselfException;
+import com.ljf.model.PageParams;
+import com.ljf.model.PageResult;
 import com.ljf.po.MediaFiles;
 import com.ljf.service.MediaFilesService;
 import io.minio.MinioClient;
@@ -24,6 +29,7 @@ import java.io.ByteArrayInputStream;
 import java.text.SimpleDateFormat;
 import java.time.LocalDateTime;
 import java.util.Date;
+import java.util.List;
 
 /**
  * @Classname MediaFilesServiceImpl
@@ -219,6 +225,40 @@ public class MediaFilesServiceImpl implements MediaFilesService {
         }
         return mediaFiles;
     }
+
+    @Override
+    public PageResult<MediaFiles> queryMediaFiels(Long companyId, PageParams pageParams, QueryMediaParamsDto queryMediaParamsDto) {
+        //构建查询条件对象
+        LambdaQueryWrapper<MediaFiles> queryWrapper = new LambdaQueryWrapper<>();
+
+        //分页对象
+        Page<MediaFiles> page = new Page<>(pageParams.getPageNo(), pageParams.getPageSize());
+        // 查询数据内容获得结果
+        Page<MediaFiles> pageResult = mediaFilesMapper.selectPage(page, queryWrapper);
+        // 获取数据列表
+        List<MediaFiles> list = pageResult.getRecords();
+        // 获取数据总数
+        long total = pageResult.getTotal();
+        // 构建结果集
+        PageResult<MediaFiles> mediaListResult = new PageResult<>(list, total, pageParams.getPageNo(), pageParams.getPageSize());
+        return mediaListResult;
+    }
+
+        @Override
+        public MediaFiles getFileById(String id) {
+            MediaFiles mediaFiles = mediaFilesMapper.selectById(id);
+            if(mediaFiles==null){
+                myselfException.cast("文件不存在");
+            }
+            String url = mediaFiles.getUrl();
+            if(StringUtils.isEmpty(url)){
+                myselfException.cast("文件还没有处理，请稍后预览");
+            }
+
+            return mediaFiles;
+        }
+
+
     /*
      * @description:根据扩展名拿匹配的媒体类型
      * @author 李炯飞

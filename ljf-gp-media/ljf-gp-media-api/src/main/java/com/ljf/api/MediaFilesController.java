@@ -1,9 +1,15 @@
 package com.ljf.api;
 
+import com.ljf.dto.QueryMediaParamsDto;
 import com.ljf.dto.UploadFileParamsDto;
 import com.ljf.dto.UploadFileResultDto;
 import com.ljf.exception.myselfException;
+import com.ljf.model.PageParams;
+import com.ljf.model.PageResult;
+import com.ljf.model.RestResponse;
+import com.ljf.po.MediaFiles;
 import com.ljf.service.MediaFilesService;
+import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
@@ -45,5 +51,35 @@ public class MediaFilesController {
         }
 
         return uploadFileResultDto;
+    }
+    /*
+     * @description:
+     * @author 李炯飞
+     * @date: 2023/2/18 16:41
+     * @param:
+     * @return:
+     **/
+    @PostMapping("/files")
+    public PageResult<MediaFiles> list(PageParams pageParams, @RequestBody QueryMediaParamsDto queryMediaParamsDto) {
+
+        Long companyId = 1232141425L;
+        return mediaFilesService.queryMediaFiels(companyId, pageParams, queryMediaParamsDto);
+
+    }
+    /*
+     * @description:
+     * @author 李炯飞
+     * @date: 2023/2/18 16:48
+     * @param: [mediaId]
+     * @return: RestResponse<String>
+     **/
+    @ApiOperation("预览文件")
+    @GetMapping("/preview/{mediaId}")
+    public RestResponse<String> getPlayUrlByMediaId(@PathVariable String mediaId){
+
+        //调用service查询文件的url
+
+        MediaFiles mediaFiles = mediaFilesService.getFileById(mediaId);
+        return RestResponse.success(mediaFiles.getUrl());
     }
 }

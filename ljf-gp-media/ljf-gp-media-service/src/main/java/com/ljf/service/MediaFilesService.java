@@ -1,7 +1,10 @@
 package com.ljf.service;
 
+import com.ljf.dto.QueryMediaParamsDto;
 import com.ljf.dto.UploadFileParamsDto;
 import com.ljf.dto.UploadFileResultDto;
+import com.ljf.model.PageParams;
+import com.ljf.model.PageResult;
 import com.ljf.po.MediaFiles;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -23,4 +26,8 @@ public interface MediaFilesService {
     **/
    @Transactional
    MediaFiles addMediaFilesToDb(Long companyId, String fileId, UploadFileParamsDto uploadFileParamsDto, String bucket, String objectName);
+
+    PageResult<MediaFiles> queryMediaFiels(Long companyId, PageParams pageParams, QueryMediaParamsDto queryMediaParamsDto);
+
+    MediaFiles getFileById(String mediaId);
 }
