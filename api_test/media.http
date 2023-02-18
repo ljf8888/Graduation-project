@@ -3,7 +3,7 @@ POST {{gateway}}/media/upload/coursefile
 Content-Type: multipart/form-data;boundary=TestBoundary
 
 --TestBoundary
-Content-Disposition: form-data;name="filedata";filename="01.jpg"
+Content-Disposition: form-data;name="filedata";filename="02.jpg"
 Content-Type: application/octet-stream
 
-<E:/desktop/wv_1549537504355.jpg
+<E:/图片/huawei nava5Pro/ScreenShots/SRC_20100101_090913.jpg

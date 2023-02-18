@@ -10,6 +10,7 @@ import com.ljf.po.MediaFiles;
 import com.ljf.service.MediaFilesService;
 import io.minio.MinioClient;
 import io.minio.PutObjectArgs;
+import io.minio.UploadObjectArgs;
 import org.apache.commons.codec.digest.DigestUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.BeanUtils;
@@ -45,9 +46,7 @@ public class MediaFilesServiceImpl implements MediaFilesService {
     //普通文件存储的桶
     @Value("${minio.bucket.files}")
     private String bucket_files;
-    //视频文件存储的桶
-    @Value("${minio.bucket.videofiles}")
-    private String bucket_videofiles;
+
 
     /*
      * @description:
@@ -128,7 +127,7 @@ public class MediaFilesServiceImpl implements MediaFilesService {
      * @param: [bytes, bucket, objectName]
      * @return: void
      **/
-    private void addMediaFilesToMinIO(byte[] bytes, String bucket, String objectName) {
+    public void addMediaFilesToMinIO(byte[] bytes, String bucket, String objectName) {
 
         //资源的媒体类型
         String contentType = MediaType.APPLICATION_OCTET_STREAM_VALUE;//默认未知二进制流
@@ -237,5 +236,20 @@ public class MediaFilesServiceImpl implements MediaFilesService {
             }
         }
         return  contentType;
+    }
+
+    //将文件上传到文件系统
+    public void addMediaFilesToMinIO(String filePath, String bucket, String objectName){
+        try {
+            UploadObjectArgs uploadObjectArgs = UploadObjectArgs.builder()
+                    .bucket(bucket)
+                    .object(objectName)
+                    .filename(filePath)
+                    .build();
+            //上传
+            minioClient.uploadObject(uploadObjectArgs);
+        } catch (Exception e) {
+            myselfException.cast("文件上传到文件系统失败");
+        }
     }
 }
