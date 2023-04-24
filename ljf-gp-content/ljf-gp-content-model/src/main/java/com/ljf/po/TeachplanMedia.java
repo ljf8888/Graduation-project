@@ -25,6 +25,7 @@ public class TeachplanMedia implements Serializable {
     @TableId(value = "id", type = IdType.AUTO)
     private Long id;
 
+
     /**
      * 媒资文件id
      */
@@ -43,8 +44,8 @@ public class TeachplanMedia implements Serializable {
     /**
      * 媒资文件原始名称
      */
-    @TableField("media_fileName")
-    private String mediaFilename;
+    @TableField("mediaFileName")
+    private String mediaFileName;
 
     @TableField(fill = FieldFill.INSERT)
     private LocalDateTime createDate;
@@ -59,5 +60,68 @@ public class TeachplanMedia implements Serializable {
      */
     private String changePeople;
 
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
+    }
+
+    public String getMediaId() {
+        return mediaId;
+    }
+
+    public void setMediaId(String mediaId) {
+        this.mediaId = mediaId;
+    }
+
+    public Long getTeachplanId() {
+        return teachplanId;
+    }
+
+    public void setTeachplanId(Long teachplanId) {
+        this.teachplanId = teachplanId;
+    }
+
+    public Long getCourseId() {
+        return courseId;
+    }
+
+    public void setCourseId(Long courseId) {
+        this.courseId = courseId;
+    }
+
+    public String getMediaFileName() {
+        return mediaFileName;
+    }
+
+    public void setMediaFileName(String mediaFileName) {
+        this.mediaFileName = mediaFileName;
+    }
+
+    public LocalDateTime getCreateDate() {
+        return createDate;
+    }
+
+    public void setCreateDate(LocalDateTime createDate) {
+        this.createDate = createDate;
+    }
+
+    public String getCreatePeople() {
+        return createPeople;
+    }
+
+    public void setCreatePeople(String createPeople) {
+        this.createPeople = createPeople;
+    }
+
+    public String getChangePeople() {
+        return changePeople;
+    }
+
+    public void setChangePeople(String changePeople) {
+        this.changePeople = changePeople;
+    }
 
 }

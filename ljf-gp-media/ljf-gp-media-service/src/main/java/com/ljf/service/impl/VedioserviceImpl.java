@@ -40,9 +40,6 @@ public class VedioserviceImpl implements VedioService {
     @Autowired
     MediaFilesMapper mediaFilesMapper;
 
-    //视频文件存储的桶
-    @Value("${minio.bucket.videofiles}")
-    private String bucket_videofiles;
 
     @Override
     public RestResponse<Boolean> checkFile(String fileMd5) {
@@ -76,7 +73,7 @@ public class VedioserviceImpl implements VedioService {
 
         //查询文件系统分块文件是否存在
         //查看是否在文件系统存在
-        GetObjectArgs getObjectArgs = GetObjectArgs.builder().bucket(bucket_videofiles).object(chunkFilePath).build();
+        GetObjectArgs getObjectArgs = GetObjectArgs.builder().bucket("video").object(chunkFilePath).build();
         try {
             InputStream inputStream = minioClient.getObject(getObjectArgs);
             if(inputStream==null){
@@ -98,7 +95,7 @@ public class VedioserviceImpl implements VedioService {
         String chunkFilePath = chunkFileFolderPath + chunk;
 
         try {
-            addMediaFilesToMinIO(bytes, bucket_videofiles, chunkFilePath);
+            addMediaFilesToMinIO(bytes, "video", chunkFilePath);
             //上传成功
             return RestResponse.success(true);
         } catch (Exception e) {
@@ -159,11 +156,11 @@ public class VedioserviceImpl implements VedioService {
             //拿到合并文件在minio的存储路径
             String mergeFilePath = getFilePathByMd5(fileMd5, extension);
             //将合并后的文件上传到文件系统
-            addMediaFilesToMinIO(tempMergeFile.getAbsolutePath(), bucket_videofiles, mergeFilePath);
+            addMediaFilesToMinIO(tempMergeFile.getAbsolutePath(), "video", mergeFilePath);
 
             //将文件信息入库保存
             uploadFileParamsDto.setFileSize(tempMergeFile.length());//合并文件的大小
-            addMediaFilesToDb(companyId, fileMd5, uploadFileParamsDto, bucket_videofiles, mergeFilePath);
+            addMediaFilesToDb(companyId, fileMd5, uploadFileParamsDto, "video", mergeFilePath);
 
             return RestResponse.success(true);
         }finally {
@@ -205,7 +202,7 @@ public class VedioserviceImpl implements VedioService {
             }
 
             //下载分块文件
-            downloadFileFromMinIO(chunkFile, bucket_videofiles, chunkFilePath);
+            downloadFileFromMinIO(chunkFile, "video", chunkFilePath);
             chunkFiles[i] = chunkFile;
 
         }

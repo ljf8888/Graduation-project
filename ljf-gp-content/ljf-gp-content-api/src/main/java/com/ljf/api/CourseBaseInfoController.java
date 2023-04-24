@@ -1,9 +1,6 @@
 package com.ljf.api;
 
-import com.ljf.dto.AddCourseDto;
-import com.ljf.dto.CourseBaseInfoDto;
-import com.ljf.dto.CourseCategoryTreeDto;
-import com.ljf.dto.QueryCourseParamsDto;
+import com.ljf.dto.*;
 import com.ljf.exception.ValidationGroups;
 import com.ljf.model.PageParams;
 import com.ljf.model.PageResult;
@@ -12,7 +9,9 @@ import com.ljf.service.CourseBaseService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.ModelAndView;
 
+import java.io.File;
 import java.util.List;
 
 /**
@@ -64,6 +63,33 @@ public class CourseBaseInfoController {
     public CourseBaseInfoDto createCourseBase(@RequestBody @Validated(ValidationGroups.Inster.class) AddCourseDto addCourseDto){
         Long companyId = 22L;
         return courseBaseService.createCourseBase(companyId,addCourseDto);
+    }
+
+    @ResponseBody
+    @PostMapping("/courseaudit/commit/{courseId}")
+    public void commitAudit(@PathVariable("courseId") Long courseId) {
+        Long companyId = 22L;
+        courseBaseService.commitAudit(companyId, courseId);
+    }
+    @ResponseBody
+    @PostMapping("/coursepublish/{courseId}")
+    public void coursepublish(@PathVariable("courseId") Long courseId) {
+
+        Long companyId = 22L;
+        courseBaseService.publish(companyId,courseId);
+    }
+
+    @GetMapping("/coursepreview/{courseId}")
+    public ModelAndView preview(@PathVariable("courseId") Long courseId) {
+
+        //查询数据
+        CoursePreviewDto coursePreviewInfo = courseBaseService.getCoursePreviewInfo(courseId);
+
+
+        ModelAndView modelAndView = new ModelAndView();
+        modelAndView.addObject("model", coursePreviewInfo);
+        modelAndView.setViewName("/templates/course_template.ftl");
+        return modelAndView;
     }
 
 }

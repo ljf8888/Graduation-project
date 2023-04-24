@@ -15,3 +15,8 @@ http://localhost:8601/#/organization/course-list
 
 ### 新增
 POST http://localhost:8080/content/course
+
+###
+GET {{gateway}}/teachplan/25/tree-nodes
+
+POST http://localhost:8086/api/media/upload/coursefile1

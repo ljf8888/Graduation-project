@@ -1,5 +1,5 @@
 minio:
-  endpoint: http://192.168.10.110:9000
+  endpoint: http://192.168.10.112:9000
   accessKey: minioadmin
   secretKey: minioadmin
   bucket:
@@ -17,15 +17,6 @@ spring:
       discovery:
         namespace: dev
         group: Graduation-project
-      config:
-        namespace: dev
-        group: Graduation-project
-        file-extension: yaml
-        refresh-enabled: true
-      extension-configs:
-        - data-id: content-service-dev.yaml
-          group: Graduation-project
-          refresh: true
     config:
       override-none: true
   application:

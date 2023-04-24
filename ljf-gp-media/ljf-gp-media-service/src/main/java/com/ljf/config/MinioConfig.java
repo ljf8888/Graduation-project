@@ -15,22 +15,14 @@ import org.springframework.context.annotation.Configuration;
 @Configuration
 public class MinioConfig {
 
-    //读取参数
-
-    @Value("${minio.endpoint}")
-    private String endpoint;
-    @Value("${minio.accessKey}")
-    private String accessKey;
-    @Value("${minio.secretKey}")
-    private String secretKey;
 
     @Bean
     public MinioClient minioClient() {
 
         MinioClient minioClient =
                 MinioClient.builder()
-                        .endpoint(endpoint)
-                        .credentials(accessKey, secretKey)
+                        .endpoint("http://192.168.10.112:9000")
+                        .credentials("minioadmin", "minioadmin")
                         .build();
         return minioClient;
     }

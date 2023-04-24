@@ -21,11 +21,11 @@
             <artifactId>ljf-gp-content-model</artifactId>
             <version>0.0.1-SNAPSHOT</version>
         </dependency>
-<!--        <dependency>-->
-<!--            <groupId>com.xuecheng</groupId>-->
-<!--            <artifactId>xuecheng-plus-message-sdk</artifactId>-->
-<!--            <version>0.0.1-SNAPSHOT</version>-->
-<!--        </dependency>-->
+        <dependency>
+            <groupId>com.ljf</groupId>
+            <artifactId>ljf-gp-message-SDK</artifactId>
+            <version>0.0.1-SNAPSHOT</version>
+        </dependency>
         <!-- MySQL 驱动 -->
         <dependency>
             <groupId>mysql</groupId>
@@ -91,7 +91,13 @@
             <groupId>org.springframework.cloud</groupId>
             <artifactId>spring-cloud-starter-openfeign</artifactId>
         </dependency>
-<!--        <dependency>-->
+        <dependency>
+            <groupId>com.ljf</groupId>
+            <artifactId>ljf-gp-message-SDK</artifactId>
+            <version>0.0.1-SNAPSHOT</version>
+            <scope>compile</scope>
+        </dependency>
+        <!--        <dependency>-->
 <!--            <groupId>io.github.openfeign</groupId>-->
 <!--            <artifactId>feign-httpclient</artifactId>-->
 <!--        </dependency>-->

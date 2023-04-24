@@ -12,6 +12,10 @@
     <artifactId>ljf-gp-gateway</artifactId>
 
     <dependencies>
+        <dependency>
+            <groupId>org.springframework</groupId>
+            <artifactId>spring-core</artifactId>
+        </dependency>
 
         <!--网关-->
         <dependency>
@@ -55,7 +59,7 @@
                 </exclusion>
             </exclusions>
         </dependency>
-
+        
         <!-- Spring Boot 集成 log4j2 -->
         <dependency>
             <groupId>org.springframework.boot</groupId>
@@ -71,6 +75,11 @@
             <artifactId>junit</artifactId>
             <scope>test</scope>
         </dependency>
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-autoconfigure</artifactId>
+        </dependency>
+
 
 
     </dependencies>

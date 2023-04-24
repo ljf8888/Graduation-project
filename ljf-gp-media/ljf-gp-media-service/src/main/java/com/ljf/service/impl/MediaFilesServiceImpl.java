@@ -49,9 +49,7 @@ public class MediaFilesServiceImpl implements MediaFilesService {
     @Autowired
     MinioClient minioClient;
 
-    //普通文件存储的桶
-    @Value("${minio.bucket.files}")
-    private String bucket_files;
+
 
 
     /*
@@ -83,9 +81,9 @@ public class MediaFilesServiceImpl implements MediaFilesService {
         objectName = folder + objectName;
         try {
 
-            addMediaFilesToMinIO(bytes, bucket_files, objectName);
+            addMediaFilesToMinIO(bytes, "pic", objectName);
 
-            MediaFiles mediaFiles = mediafilesproxy.addMediaFilesToDb(companyId, fileMd5, uploadFileParamsDto, bucket_files, objectName);
+            MediaFiles mediaFiles = mediafilesproxy.addMediaFilesToDb(companyId, fileMd5, uploadFileParamsDto, "pic", objectName);
             //准备返回数据
             UploadFileResultDto uploadFileResultDto = new UploadFileResultDto();
             BeanUtils.copyProperties(mediaFiles, uploadFileResultDto);

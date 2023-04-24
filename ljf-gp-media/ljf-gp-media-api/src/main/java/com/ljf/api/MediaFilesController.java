@@ -22,12 +22,13 @@ import org.springframework.web.multipart.MultipartFile;
  * @Date 2023/2/15 14:30
  * @Created by 李炯飞
  */
+
 @RestController
 public class MediaFilesController {
     @Autowired
     MediaFilesService mediaFilesService;
 
-    @PostMapping(value = "/upload/coursefile1", consumes = {MediaType.MULTIPART_FORM_DATA_VALUE})
+    @PostMapping(value = "/api/media/upload/coursefile1", consumes = {MediaType.MULTIPART_FORM_DATA_VALUE})
     public UploadFileResultDto upload(@RequestPart("filedata") MultipartFile filedata,
                                       @RequestParam(value = "folder",required=false) String folder,
                                       @RequestParam(value= "objectName",required=false) String objectName){
@@ -59,7 +60,7 @@ public class MediaFilesController {
      * @param:
      * @return:
      **/
-    @PostMapping("/files")
+    @PostMapping("/api/media/files")
     public PageResult<MediaFiles> list(PageParams pageParams, @RequestBody QueryMediaParamsDto queryMediaParamsDto) {
 
         Long companyId = 1232141425L;

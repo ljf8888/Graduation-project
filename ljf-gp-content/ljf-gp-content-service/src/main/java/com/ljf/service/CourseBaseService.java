@@ -1,9 +1,6 @@
 package com.ljf.service;
 
-import com.ljf.dto.AddCourseDto;
-import com.ljf.dto.CourseBaseInfoDto;
-import com.ljf.dto.CourseCategoryTreeDto;
-import com.ljf.dto.QueryCourseParamsDto;
+import com.ljf.dto.*;
 import com.ljf.model.PageParams;
 import com.ljf.model.PageResult;
 import com.ljf.po.CourseBase;
@@ -42,4 +39,12 @@ public interface CourseBaseService {
      * @return: com.ljf.dto.CourseBaseInfoDto
      **/
     CourseBaseInfoDto createCourseBase(Long companyId, AddCourseDto addCourseDto);
+
+    CoursePreviewDto getCoursePreviewInfo(Long courseId);
+
+    void commitAudit(Long companyId, Long courseId);
+
+    void publish(Long companyId, Long courseId);
+
+    CourseBaseInfoDto getCourseBaseInfo(Long courseId);
 }

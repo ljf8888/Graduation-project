@@ -1,21 +1,18 @@
 package com.ljf.service.impl;
 
+import com.alibaba.fastjson.JSON;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
-import com.ljf.dao.CourseBaseDao;
-import com.ljf.dao.CourseCategoryDao;
-import com.ljf.dao.CourseMarketDao;
-import com.ljf.dto.AddCourseDto;
-import com.ljf.dto.CourseBaseInfoDto;
-import com.ljf.dto.CourseCategoryTreeDto;
-import com.ljf.dto.QueryCourseParamsDto;
+import com.ljf.dao.*;
+import com.ljf.dto.*;
 import com.ljf.exception.myselfException;
+import com.ljf.messageSDK.model.po.MqMessage;
+import com.ljf.messageSDK.service.MqMessageService;
 import com.ljf.model.PageParams;
 import com.ljf.model.PageResult;
-import com.ljf.po.CourseBase;
-import com.ljf.po.CourseCategory;
-import com.ljf.po.CourseMarket;
+import com.ljf.po.*;
 import com.ljf.service.CourseBaseService;
+import com.ljf.service.TvdetailsService;
 import jdk.nashorn.internal.runtime.Context;
 import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.BeanUtils;
@@ -40,13 +37,34 @@ import java.util.List;
 public class CourseBaseServiceimpl implements CourseBaseService {
 
     @Autowired
+    CoursePublishMapper coursePublishMapper;
+
+    @Autowired
+    MqMessageService mqMessageService;
+
+    @Autowired
     CourseBaseDao courseBaseDao;
+
+    @Autowired
+    CoursePublishDao coursePublishDao;
 
     @Autowired
     CourseMarketDao courseMarketDao;
 
     @Autowired
     CourseCategoryDao courseCategoryDao;
+
+    @Autowired
+    TvdetailsService tvdetailsService;
+
+
+    /**
+     * @description 根据课程id查询课程信息，包括基本信息和营销信息
+     * @param courseId
+     * @return com.xuecheng.content.model.dto.CourseBaseInfoDto
+     * @author Mr.M
+     * @date 2022/10/8 16:10
+     */
     
     /**
      * @description:
@@ -176,6 +194,108 @@ public class CourseBaseServiceimpl implements CourseBaseService {
         return getCourseBaseInfo(courseId);
     }
 
+    @Override
+    public CoursePreviewDto getCoursePreviewInfo(Long courseId) {
+
+        //基本信息、营销信息
+        CourseBaseInfoDto courseBaseInfo = getCourseBaseInfo(courseId);
+
+        //教学计划
+        List<TeachplanDto> teachplayTree = new TvdetailsServiceimpl().findTeachplanTree(courseId);
+
+        CoursePreviewDto coursePreviewDto = new CoursePreviewDto();
+        coursePreviewDto.setCourseBase(courseBaseInfo);
+        coursePreviewDto.setTeachplans(teachplayTree);
+        return coursePreviewDto;
+    }
+
+    @Override
+    public void commitAudit(Long companyId, Long courseId) {
+        //约束校验
+        CourseBase courseBase = courseBaseDao.selectById(courseId);
+        //课程审核状态
+        String auditStatus = courseBase.getAuditStatus();
+        //当前审核状态为已提交不允许再次提交
+        if ("202003".equals(auditStatus)) {
+            myselfException.cast("当前为等待审核状态，审核完成可以再次提交。");
+        }
+        //本机构只允许提交本机构的课程
+        if (!courseBase.getCompanyId().equals(companyId)) {
+            myselfException.cast("不允许提交其它机构的课程。");
+        }
+
+        //课程图片是否填写
+        if (org.apache.commons.lang3.StringUtils.isEmpty(courseBase.getPic())) {
+            myselfException.cast("提交失败，请上传课程图片");
+        }
+
+        //查询课程计划信息
+        List<TeachplanDto> teachplanTree = tvdetailsService.findTeachplanTree(courseId);
+
+        //封装数据，基本信息、营销信息、课程计划信息、师资信息
+        CoursePublishPre coursePublishPre = new CoursePublishPre();
+        //查询基本信息
+        CourseBaseInfoDto courseBaseInfo = getCourseBaseInfo(courseId);
+        BeanUtils.copyProperties(courseBaseInfo, coursePublishPre);
+        if (teachplanTree!=null){
+            String teachplanTreeJson = JSON.toJSONString(teachplanTree);
+            coursePublishPre.setTeachplan(teachplanTreeJson);
+        }
+
+        //课程营销信息
+        CourseMarket courseMarket = courseMarketDao.selectById(courseId);
+        //转为json
+        String courseMarketJson = JSON.toJSONString(courseMarket);
+        //将课程营销信息json数据放入课程预发布表
+        coursePublishPre.setMarket(courseMarketJson);
+
+        //课程预发布表初始审核状态
+        coursePublishPre.setStatus("202003");
+
+        CoursePublishPre coursePublishPre1 = coursePublishDao.selectById(courseId);
+        if (coursePublishPre1 == null) {
+            coursePublishDao.insert(coursePublishPre);
+        } else {
+            coursePublishDao.updateById(coursePublishPre);
+        }
+
+        //更新课程基本表的审核状态
+        courseBase.setAuditStatus("202003");
+        courseBaseDao.updateById(courseBase);
+    }
+
+    @Override
+    public void publish(Long companyId, Long courseId) {
+        //约束校验
+        //查询课程预发布表
+        CoursePublishPre coursePublishPre = coursePublishDao.selectById(courseId);
+        if(coursePublishPre == null){
+            myselfException.cast("请先提交课程审核，审核通过才可以发布");
+        }
+        //本机构只允许提交本机构的课程
+        if(!coursePublishPre.getCompanyId().equals(companyId)){
+            myselfException.cast("不允许提交其它机构的课程。");
+        }
+
+
+        //课程审核状态
+        String auditStatus = coursePublishPre.getStatus();
+        //审核通过方可发布
+        if(!"202004".equals(auditStatus)){
+            myselfException.cast("操作失败，课程审核通过方可发布。");
+        }
+
+        //保存课程发布信息
+        saveCoursePublish(courseId);
+
+        //保存消息表
+        saveCoursePublishMessage(courseId);
+
+        //删除课程预发布表对应记录
+        coursePublishDao.deleteById(courseId);
+    }
+
+    @Override
     public CourseBaseInfoDto getCourseBaseInfo(Long courseId){
         //课程基本信息
         CourseBase courseBase = courseBaseDao.selectById(courseId);
@@ -196,6 +316,35 @@ public class CourseBaseServiceimpl implements CourseBaseService {
 
         return courseBaseInfoDto;
     }
+    //保存课程发布信息
+    private void saveCoursePublish(Long courseId) {
 
+        //课程发布信息来源于预发布表
+        CoursePublishPre coursePublishPre = coursePublishDao.selectById(courseId);
+
+        CoursePublish coursePublish = new CoursePublish();
+        //拷贝到课程发布对象
+        BeanUtils.copyProperties(coursePublishPre,coursePublish);
+        coursePublish.setStatus("203002");//已发布
+
+        CoursePublish coursePublishUpdate = coursePublishMapper.selectById(courseId);
+        if(coursePublishUpdate == null){
+            coursePublishMapper.insert(coursePublish);
+        }else{
+            coursePublishMapper.updateById(coursePublish);
+        }
+        //更新课程基本表的发布状态
+        CourseBase courseBase = courseBaseDao.selectById(courseId);
+        courseBase.setStatus("203002");//已发布
+        courseBaseDao.updateById(courseBase);
+    }
+
+    //保存消息表
+    private void saveCoursePublishMessage(Long courseId) {
+        MqMessage mqMessage = mqMessageService.addMessage("course_publish", String.valueOf(courseId), null, null);
+        if(mqMessage == null){
+            myselfException.cast("添加消息记录失败");
+        }
+    }
 
 }
